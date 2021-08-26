@@ -29,4 +29,12 @@ router.put("/documents/:id", async (req, res) => {
     res.json(document);
 });
 
+router.post("/documents", async (req, res) => {
+    const client = new DBClient();
+
+    const document = await client.createDocument(req.body);
+
+    res.json(document);
+});
+
 module.exports = router;

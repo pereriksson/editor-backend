@@ -65,6 +65,24 @@ class DBClient {
 
         await client.close();
     }
+
+    async createDocument(document) {
+        const url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOSTNAME}`;
+
+        const client = new MongoClient(url);
+
+        await client.connect();
+        const db = client.db(DATABASE_DATABASE);
+        const documents = db.collection(DATABASE_COLLECTION);
+
+        const result = await documents.insertOne(document);
+
+        document._id = result.insertedId;
+
+        await client.close();
+
+        return document;
+    }
 }
 
 module.exports = DBClient;
