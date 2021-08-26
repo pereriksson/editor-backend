@@ -11,8 +11,18 @@ router.get("/documents", async (req, res) => {
     res.json(documents);
 });
 
-router.get("/documents/:id", async(req, res) => {
+router.get("/documents/:id", async (req, res) => {
     const client = new DBClient();
+
+    const document = await client.getDocument(req.params.id);
+
+    res.json(document);
+});
+
+router.put("/documents/:id", async (req, res) => {
+    const client = new DBClient();
+
+    await client.updateDocument(req.params.id, req.body);
 
     const document = await client.getDocument(req.params.id);
 
