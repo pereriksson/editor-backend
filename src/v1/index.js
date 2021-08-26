@@ -1,15 +1,14 @@
 const express = require("express");
+const DBClient = require("../apis/DBClient.js");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-    const data = {
-        data: {
-            msg: "Hello World"
-        }
-    };
+router.get("/documents", async (req, res) => {
+    const client = new DBClient();
 
-    res.json(data);
+    const documents = await client.getDocuments();
+
+    res.json(documents);
 });
 
 module.exports = router;
