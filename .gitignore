@@ -1,6 +1,7 @@
 
 // Development
 .idea
+.vscode
 
 // Node
 node_modules
