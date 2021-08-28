@@ -1,5 +1,7 @@
 # Editor Backend
 
+[![Build Status](https://app.travis-ci.com/pereriksson/editor-backend.svg?branch=main)](https://app.travis-ci.com/pereriksson/editor-backend)
+
 ## Purpose
 
 The purpose of this repo is to provide a REST API for storing documents in a MongoDB database. This is an application made as part of the course DV1612 JavaScript based web frameworks at Blekinge Institute of Technology.
