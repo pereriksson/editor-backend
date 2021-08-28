@@ -3,5 +3,8 @@
 .idea
 .vscode
 
+// Test
+coverage
+
 // Node
 node_modules
