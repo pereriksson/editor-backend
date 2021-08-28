@@ -3,56 +3,36 @@ const {MongoClient} = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 
 class DBClient {
-    async getDocuments() {
+    async connect() {
         const url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOSTNAME}`;
 
-        const client = new MongoClient(url);
+        this.client = new MongoClient(url);
 
         await client.connect();
-        const db = client.db(DATABASE_DATABASE);
-        const documents = db.collection(DATABASE_COLLECTION);
+        this.db = client.db(DATABASE_DATABASE);
+        this.collection = db.collection(DATABASE_COLLECTION);
+    }
 
+    async disconnect() {
+        await this.client.close();
+    }
+
+    async getDocuments() {
         const query = {};
-
-        const cursor = await documents.find(query);
-
+        const cursor = await this.collection.find(query);
         const result = await cursor.toArray();
-
-        await client.close();
-
         return result;
     }
 
     async getDocument(id) {
-        const url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOSTNAME}`;
-
-        const client = new MongoClient(url);
-
-        await client.connect();
-        const db = client.db(DATABASE_DATABASE);
-        const documents = db.collection(DATABASE_COLLECTION);
-
         const _id = new ObjectId(id);
         const query = {_id};
-
-        const cursor = await documents.find(query);
-
+        const cursor = await this.collection.find(query);
         const result = await cursor.toArray();
-
-        await client.close();
-
         return result[0];
     }
 
     async updateDocument(id, document) {
-        const url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOSTNAME}`;
-
-        const client = new MongoClient(url);
-
-        await client.connect();
-        const db = client.db(DATABASE_DATABASE);
-        const documents = db.collection(DATABASE_COLLECTION);
-
         const _id = new ObjectId(id);
         const filter = { _id };
 
@@ -61,26 +41,12 @@ class DBClient {
         };
         delete update.$set._id;
 
-        await documents.updateOne(filter, update);
-
-        await client.close();
+        await this.collection.updateOne(filter, update);
     }
 
     async createDocument(document) {
-        const url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOSTNAME}`;
-
-        const client = new MongoClient(url);
-
-        await client.connect();
-        const db = client.db(DATABASE_DATABASE);
-        const documents = db.collection(DATABASE_COLLECTION);
-
-        const result = await documents.insertOne(document);
-
+        const result = await this.collection.insertOne(document);
         document._id = result.insertedId;
-
-        await client.close();
-
         return document;
     }
 }
