@@ -1,6 +1,6 @@
 # Editor Backend
 
-[![Build Status](https://app.travis-ci.com/pereriksson/editor-backend.svg?branch=main)](https://app.travis-ci.com/pereriksson/editor-backend)
+[![Build Status](https://app.travis-ci.com/pereriksson/editor-backend.svg?branch=master)](https://app.travis-ci.com/pereriksson/editor-backend)
 
 ## Purpose
 
