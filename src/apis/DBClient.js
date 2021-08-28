@@ -8,8 +8,8 @@ class DBClient {
 
         this.client = new MongoClient(url);
 
-        await client.connect();
-        this.db = client.db(DATABASE_DATABASE);
+        await this.client.connect();
+        const db = this.client.db(DATABASE_DATABASE);
         this.collection = db.collection(DATABASE_COLLECTION);
     }
 
