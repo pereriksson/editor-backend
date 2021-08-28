@@ -1,7 +1,5 @@
-const DBClient = require("../apis/DBClient.js");
-
 const getDocuments = async (req, res) => {
-    const client = new DBClient();
+    const client = req.app.get("db");
     await client.connect();
 
     const documents = await client.getDocuments();
@@ -11,7 +9,7 @@ const getDocuments = async (req, res) => {
 };
 
 const getDocument = async (req, res) => {
-    const client = new DBClient();
+    const client = req.app.get("db");
     await client.connect();
 
     const document = await client.getDocument(req.params.id);
@@ -21,7 +19,7 @@ const getDocument = async (req, res) => {
 };
 
 const updateDocument = async (req, res) => {
-    const client = new DBClient();
+    const client = req.app.get("db");
     await client.connect();
 
     await client.updateDocument(req.params.id, req.body);
@@ -33,7 +31,7 @@ const updateDocument = async (req, res) => {
 };
 
 const createDocument = async (req, res) => {
-    const client = new DBClient();
+    const client = req.app.get("db");
     await client.connect();
 
     const document = await client.createDocument(req.body);
