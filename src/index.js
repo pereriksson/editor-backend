@@ -1,5 +1,6 @@
 "use strict";
 
+require('dotenv-flow').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const v1 = require("./v1/index.js");
