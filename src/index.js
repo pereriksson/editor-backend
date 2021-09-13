@@ -8,6 +8,7 @@ const cors = require("cors");
 const {PORT,WEBSOCKET_CORS_HOSTNAMES} = require("./constants.js");
 const DBClient = require("./apis/DBClient.js");
 const http = require('http');
+const verifyJwtTokenMiddleware = require("./middleware/verifyJwtTokenMiddleware");
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +20,7 @@ const io = require("socket.io")(server, {
 });
 
 app.set("db", new DBClient());
+app.use(verifyJwtTokenMiddleware);
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/v1", v1);

@@ -68,7 +68,7 @@ const login = async (req, res) => {
     }
 
     const payload = user;
-
+    
     // Important - do not expose!
     delete payload.password;
 
