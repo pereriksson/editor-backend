@@ -38,7 +38,14 @@ const createDocument = async (req, res) => {
     const client = req.app.get("db");
     await client.connect();
 
-    const document = await client.createDocument(req.body);
+    const parsedJwtToken = jwt.decode(req.headers.authorization.split(" ")[1]);
+
+    const document = await client.createDocument({
+        ...req.body,
+        collaborators: [
+            client.getEntityReference(parsedJwtToken._id)
+        ]
+    });
     await client.disconnect();
 
     res.json(document);

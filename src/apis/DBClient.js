@@ -3,6 +3,10 @@ const {MongoClient} = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 
 class DBClient {
+    getEntityReference(id) {
+        return ObjectId(id);
+    }
+
     async connect() {
         const url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOSTNAME}`;
 
