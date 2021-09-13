@@ -1,4 +1,4 @@
-const {DATABASE_HOSTNAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_DATABASE, DATABASE_COLLECTION} = require("../constants.js");
+const {DATABASE_HOSTNAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_DATABASE, DATABASE_USERS_COLLECTION,DATABASE_DOCUMENTS_COLLECTION} = require("../constants.js");
 const {MongoClient} = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 
@@ -9,8 +9,9 @@ class DBClient {
         this.client = new MongoClient(url);
 
         await this.client.connect();
-        const db = this.client.db(DATABASE_DATABASE);
-        this.collection = db.collection(DATABASE_COLLECTION);
+        this.db = this.client.db(DATABASE_DATABASE);
+        this.usersCollection = this.db.collection(DATABASE_USERS_COLLECTION);
+        this.documentsCollection = this.db.collection(DATABASE_DOCUMENTS_COLLECTION);
     }
 
     async disconnect() {
@@ -19,15 +20,30 @@ class DBClient {
 
     async getDocuments() {
         const query = {};
-        const cursor = await this.collection.find(query);
+        const cursor = await this.documentsCollection.find(query);
         const result = await cursor.toArray();
         return result;
+    }
+
+    async getUser(id) {
+        const _id = new ObjectId(id);
+        const query = {_id};
+        const cursor = await this.usersCollection.find(query);
+        const result = await cursor.toArray();
+        return result[0];
+    }
+
+    async getUserByUsername(username) {
+        const query = {username};
+        const cursor = await this.usersCollection.find(query);
+        const result = await cursor.toArray();
+        return result[0];
     }
 
     async getDocument(id) {
         const _id = new ObjectId(id);
         const query = {_id};
-        const cursor = await this.collection.find(query);
+        const cursor = await this.documentsCollection.find(query);
         const result = await cursor.toArray();
         return result[0];
     }
@@ -41,11 +57,11 @@ class DBClient {
         };
         delete update.$set._id;
 
-        await this.collection.updateOne(filter, update);
+        await this.documentsCollection.updateOne(filter, update);
     }
 
     async createDocument(document) {
-        const result = await this.collection.insertOne(document);
+        const result = await this.documentsCollection.insertOne(document);
         document._id = result.insertedId;
         return document;
     }
