@@ -20,8 +20,8 @@ const io = require("socket.io")(server, {
 });
 
 app.set("db", new DBClient());
-app.use(verifyJwtTokenMiddleware);
 app.use(cors());
+app.use(verifyJwtTokenMiddleware);
 app.use(bodyParser.json());
 app.use("/v1", v1);
 
