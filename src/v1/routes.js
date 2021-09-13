@@ -68,13 +68,16 @@ const login = async (req, res) => {
     }
 
     const payload = user;
-    
+
     // Important - do not expose!
     delete payload.password;
 
     const jwtToken = jwt.sign(payload, JWT_SECRET, {expiresIn: "1h"});
 
-    res.json(jwtToken);
+    res.json({
+        success: true,
+        token: jwtToken
+    });
 }
 
 module.exports = {

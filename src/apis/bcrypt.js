@@ -6,6 +6,11 @@ const hashPassword = password => {
 }
 
 const checkPassword = (password, hash) => {
+    // Protect bcrypt from invalid parameters
+    if (typeof password !== "string" || typeof hash !== "string") {
+        return false;
+    }
+
     return bcrypt.compareSync(password, hash);
 }
 
