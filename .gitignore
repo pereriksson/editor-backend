@@ -8,4 +8,4 @@ coverage
 
 // Node
 node_modules
-.env*
+.env.development
