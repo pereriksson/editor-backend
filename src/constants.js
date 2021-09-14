@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
-
 // Database
 const DATABASE_HOSTNAME = process.env.DATABASE_HOSTNAME;
 const DATABASE_USER = process.env.DATABASE_USER;
