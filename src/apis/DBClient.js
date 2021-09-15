@@ -1,4 +1,4 @@
-const {DATABASE_HOSTNAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_DATABASE, DATABASE_USERS_COLLECTION,DATABASE_DOCUMENTS_COLLECTION} = require("../constants.js");
+const {DATABASE_PROTOCOL, DATABASE_HOSTNAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_DATABASE, DATABASE_USERS_COLLECTION,DATABASE_DOCUMENTS_COLLECTION} = require("../constants.js");
 const {MongoClient} = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 
@@ -12,7 +12,7 @@ class DBClient {
             `${DATABASE_USER}:${DATABASE_PASSWORD}@`
             : "";
 
-        const url = `mongodb://${auth}${DATABASE_HOSTNAME}`;
+        const url = `${DATABASE_PROTOCOL}://${auth}${DATABASE_HOSTNAME}`;
 
         this.client = new MongoClient(url);
 
