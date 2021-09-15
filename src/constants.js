@@ -1,4 +1,5 @@
 // Database
+const DATABASE_PROTOCOL = process.env.DATABASE_PROTOCOL;
 const DATABASE_HOSTNAME = process.env.DATABASE_HOSTNAME;
 const DATABASE_USER = process.env.DATABASE_USER;
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
@@ -17,6 +18,7 @@ const PORT = process.env.PORT || 1337;
 const WEBSOCKET_CORS_HOSTNAMES = process.env.WEBSOCKET_CORS_HOSTNAMES;
 
 module.exports = {
+    DATABASE_PROTOCOL,
     DATABASE_HOSTNAME,
     DATABASE_PASSWORD,
     DATABASE_USER,
