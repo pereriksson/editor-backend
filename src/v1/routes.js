@@ -120,8 +120,10 @@ const register = async (req, res) => {
 
     const user = await db.createUser({
         username: req.body.username,
-        password: req.body.password
+        password: bcrypt.hashPassword(req.body.password)
     });
+
+    delete user.password;
 
     res.send(user);
 }
