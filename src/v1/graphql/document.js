@@ -19,7 +19,6 @@ const DocumentType = new GraphQLObjectType({
             type: new GraphQLList(UserType),
             resolve: async (document, args, req) => {
                 await req.app.get("db").connect();
-                console.log(document)
                 return document.collaborators.map(async _id => await req.app.get("db").getUser(_id.toString()))
             }
         }
