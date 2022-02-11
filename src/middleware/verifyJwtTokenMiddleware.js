@@ -1,5 +1,9 @@
+const express = require("express");
 const jwt = require("jsonwebtoken");
 const {JWT_SECRET} = require("../constants");
+const url = require("url");
+
+const app = express();
 
 let verifyJwtTokenMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -7,6 +11,8 @@ let verifyJwtTokenMiddleware = (req, res, next) => {
         "/v1/login",
         "/v1/register"
     ];
+
+    const reqUrl = url.parse(req.url);
 
     if (authHeader) {
         const token = authHeader.split(' ')[1];
@@ -19,7 +25,7 @@ let verifyJwtTokenMiddleware = (req, res, next) => {
             req.payload = payload;
             next();
         });
-    } else if (safeAnonymousRoutes.includes(req.originalUrl)) {
+    } else if (safeAnonymousRoutes.includes(reqUrl.pathname)) {
         next();
     } else {
         res.sendStatus(401);
