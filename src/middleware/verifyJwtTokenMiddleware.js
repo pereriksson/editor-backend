@@ -3,6 +3,10 @@ const {JWT_SECRET} = require("../constants");
 
 let verifyJwtTokenMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
+    const safeAnonymousRoutes = [
+        "/v1/login",
+        "/v1/register"
+    ];
 
     if (authHeader) {
         const token = authHeader.split(' ')[1];
@@ -15,10 +19,10 @@ let verifyJwtTokenMiddleware = (req, res, next) => {
             req.payload = payload;
             next();
         });
-    } else if (req.originalUrl !== '/v1/login') {
-        res.sendStatus(401);
-    } else {
+    } else if (safeAnonymousRoutes.includes(req.originalUrl)) {
         next();
+    } else {
+        res.sendStatus(401);
     }
 };
 

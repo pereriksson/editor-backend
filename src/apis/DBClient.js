@@ -32,10 +32,12 @@ class DBClient {
         await this.db.collection(name).drop();
     }
 
-    async getDocuments() {
+    async getDocuments(_id) {
         this.usersCollection = this.db.collection(DATABASE_USERS_COLLECTION);
         this.documentsCollection = this.db.collection(DATABASE_DOCUMENTS_COLLECTION);
-        const query = {};
+        const query = {
+            collaborators: ObjectId(_id)
+        };
         const cursor = await this.documentsCollection.find(query);
         const result = await cursor.toArray();
         return result;
@@ -61,11 +63,14 @@ class DBClient {
         return result[0];
     }
 
-    async getDocument(id) {
+    async getDocument(id, collaboratorId) {
         this.usersCollection = this.db.collection(DATABASE_USERS_COLLECTION);
         this.documentsCollection = this.db.collection(DATABASE_DOCUMENTS_COLLECTION);
         const _id = new ObjectId(id);
-        const query = {_id};
+        const query = {
+            _id,
+            collaborators: ObjectId(collaboratorId)
+        };
         const cursor = await this.documentsCollection.find(query);
         const result = await cursor.toArray();
         return result[0];
