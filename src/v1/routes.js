@@ -1,6 +1,7 @@
 const bcrypt = require("../apis/bcrypt");
 const {JWT_SECRET} = require("../constants");
 const jwt = require("jsonwebtoken");
+const Sendgrid = require("../apis/Sendgrid");
 
 const getDocuments = async (req, res) => {
     const client = req.app.get("db");
@@ -128,11 +129,25 @@ const register = async (req, res) => {
     res.send(user);
 }
 
+const invite = async (req, res) => {
+    const db = req.app.get("db");
+    await db.connect();
+    const invite = await db.createInvite({
+        documentId: req.body.documentId,
+        email: req.body.email
+    });
+
+    const sendgrid = new Sendgrid();
+    const body = await sendgrid.invite(req.body.email, invite._id);
+    res.sendStatus(200);
+}
+
 module.exports = {
     getDocument,
     getDocuments,
     updateDocument,
     createDocument,
     login,
-    register
+    register,
+    invite
 };

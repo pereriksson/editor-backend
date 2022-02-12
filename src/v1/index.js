@@ -1,6 +1,6 @@
 const express = require("express");
 const {GRAPHQL_GRAPHIQL} = require("../constants");
-const {getDocuments, getDocument, updateDocument, createDocument, login, register} = require("./routes.js");
+const {getDocuments, getDocument, updateDocument, createDocument, login, register, invite} = require("./routes.js");
 const {GraphQLSchema} = require("graphql");
 const RootQueryType = require("./graphql/root.js");
 const {graphqlHTTP} = require("express-graphql");
@@ -13,6 +13,7 @@ router.put("/documents/:id", updateDocument);
 router.post("/documents", createDocument);
 router.post("/login", login);
 router.post("/register", register);
+router.post("/invite", invite);
 
 const schema = new GraphQLSchema({
     query: RootQueryType

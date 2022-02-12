@@ -1,4 +1,13 @@
-const {DATABASE_PROTOCOL, DATABASE_HOSTNAME, DATABASE_USER, DATABASE_PASSWORD, DATABASE_DATABASE, DATABASE_USERS_COLLECTION,DATABASE_DOCUMENTS_COLLECTION} = require("../constants.js");
+const {
+    DATABASE_PROTOCOL,
+    DATABASE_HOSTNAME,
+    DATABASE_USER,
+    DATABASE_PASSWORD,
+    DATABASE_DATABASE,
+    DATABASE_USERS_COLLECTION,
+    DATABASE_DOCUMENTS_COLLECTION,
+    DATABASE_INVITES_COLLECTION
+} = require("../constants.js");
 const {MongoClient} = require("mongodb");
 const ObjectId = require("mongodb").ObjectId;
 
@@ -96,6 +105,13 @@ class DBClient {
         const result = await this.documentsCollection.insertOne(document);
         document._id = result.insertedId;
         return document;
+    }
+
+    async createInvite(invite) {
+        this.invitesCollection = this.db.collection(DATABASE_INVITES_COLLECTION);
+        const result = await this.invitesCollection.insertOne(invite);
+        invite._id = result.insertedId;
+        return invite;
     }
 
     async createUser(user) {
