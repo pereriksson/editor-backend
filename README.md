@@ -24,14 +24,17 @@ npm start
 
 ## Routes
 
-This REST API provides the following routes to manipulate documents:
+This REST API provides the following routes:
 
-| Route              | Description                       |
-|--------------------|-----------------------------------|
-| GET /documents     | Fetch all documents               |
-| GET /documents/:id | Fetch a single document by its id |
-| POST /documents    | Create a document                 |
-| PUT /documents/:id | Update an existing document       |
+| Route              | Description                             |
+|--------------------|-----------------------------------------|
+| POST /login        | Login as a user in the users collection |
+| POST /register     | Register as a new user                  |
+| POST /invite       | Invite a user to collaborate            |
+| GET /documents     | Fetch all documents                     |
+| GET /documents/:id | Fetch a single document by its id       |
+| POST /documents    | Create a document                       |
+| PUT /documents/:id | Update an existing document             |
 
 ## A typical document
 
