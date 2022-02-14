@@ -16,6 +16,9 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await app.get("db").deleteAllDocuments(DATABASE_DOCUMENTS_COLLECTION);
+    await app.get("db").deleteAllDocuments(DATABASE_USERS_COLLECTION);
+    await app.get("db").deleteAllDocuments(DATABASE_INVITES_COLLECTION);
     await app.get("db").disconnect();
 });
 
@@ -147,4 +150,26 @@ test("Check there is one document", async () => {
         .set("Authorization", "Bearer "+token)
         .expect(200);
     expect(res.body.length).toBe(1);
+});
+
+test("Send an invite for a document with an incorrect id", async () => {
+    const res = await supertest(app)
+        .post("/v1/invite")
+        .set("Authorization", "Bearer "+token)
+        .send({
+            documentId: incorrectDocumentId,
+            email: "user@example.com"
+        })
+        .expect(400);
+});
+
+test("Send an invite for a document", async () => {
+    const res = await supertest(app)
+        .post("/v1/invite")
+        .set("Authorization", "Bearer "+token)
+        .send({
+            documentId: documentId,
+            email: "user@example.com"
+        })
+        .expect(200);
 });
