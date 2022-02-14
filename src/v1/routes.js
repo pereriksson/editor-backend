@@ -23,15 +23,29 @@ const getDocument = async (req, res) => {
 
     const document = await client.getDocument(req.params.id, req.payload._id);
 
+    if (!document) {
+        sendError(res, "The requested document does not exist.");
+        return false;
+    }
+
     res.json(document);
 };
 
 const updateDocument = async (req, res) => {
     const client = req.app.get("db");
 
+    const parsedJwtToken = jwt.decode(req.headers.authorization.split(" ")[1]);
+
+    let document = await client.getDocument(req.params.id, parsedJwtToken._id);
+
+    if (!document) {
+        sendError(res, "The requested document does not exist.");
+        return false;
+    }
+
     await client.updateDocument(req.params.id, req.body);
 
-    const document = await client.getDocument(req.params.id);
+    document = await client.getDocument(req.params.id, parsedJwtToken._id);
 
     res.json(document);
 };

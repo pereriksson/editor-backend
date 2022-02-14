@@ -8,6 +8,8 @@ const {
 
 let app;
 let token;
+let documentId;
+const incorrectDocumentId = "612810ba64dc6e39e746f1ec";
 
 beforeAll(async () => {
     return app = await createServer();
@@ -74,6 +76,14 @@ test("Login with correct credentials", async () => {
     token = res.body.token;
 });
 
+test("Check there are no documents", async () => {
+    const res = await supertest(app)
+        .get("/v1/documents")
+        .set("Authorization", "Bearer "+token)
+        .expect(200);
+    expect(res.body.length).toBe(0);
+});
+
 test("Create a document", async () => {
     const res = await supertest(app)
         .post("/v1/documents")
@@ -86,4 +96,55 @@ test("Create a document", async () => {
         })
         .expect(200);
     expect(res.body.name).toBe("Name");
+    documentId = res.body._id;
+});
+
+test("Fetch a document", async () => {
+    const res = await supertest(app)
+        .get("/v1/documents/"+documentId)
+        .set("Authorization", "Bearer "+token)
+        .expect(200);
+    expect(res.body.name).toBe("Name");
+});
+
+test("Fetch a document with an incorrect id", async () => {
+    await supertest(app)
+        .get("/v1/documents/"+incorrectDocumentId)
+        .set("Authorization", "Bearer "+token)
+        .expect(400);
+});
+
+test("Update a document", async () => {
+    const res = await supertest(app)
+        .put("/v1/documents/"+documentId)
+        .set("Authorization", "Bearer "+token)
+        .send({
+            contents: "<p>This is text2.</p>",
+            name: "Name2",
+            type: "text",
+            comments: []
+        })
+        .expect(200);
+    expect(res.body.name).toBe("Name2");
+});
+
+test("Update a document with an incorrect id", async () => {
+    const res = await supertest(app)
+        .put("/v1/documents/"+incorrectDocumentId)
+        .set("Authorization", "Bearer "+token)
+        .send({
+            contents: "<p>This is text2.</p>",
+            name: "Name2",
+            type: "text",
+            comments: []
+        })
+        .expect(400);
+});
+
+test("Check there is one document", async () => {
+    const res = await supertest(app)
+        .get("/v1/documents")
+        .set("Authorization", "Bearer "+token)
+        .expect(200);
+    expect(res.body.length).toBe(1);
 });
