@@ -11,4 +11,4 @@ ecosystem.config.js
 
 // Node
 node_modules
-.env.development
+.env.*

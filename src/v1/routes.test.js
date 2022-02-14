@@ -1,59 +1,89 @@
-const {getDocument, getDocuments, updateDocument, createDocument, login} = require("./routes");
-const DBClient = require("../apis/DBClient");
+const supertest = require("supertest");
+const createServer = require("../server");
+const {
+    DATABASE_DOCUMENTS_COLLECTION,
+    DATABASE_USERS_COLLECTION,
+    DATABASE_INVITES_COLLECTION
+} = require("../constants");
 
-const client = new DBClient();
-
-let userId;
+let app;
+let token;
 
 beforeAll(async () => {
-    await client.connect();
-    await client.createCollection("documents");
-    await client.createCollection("users");
-    const user = await client.createUser({
-        username: "per",
-        password: "$2a$12$S/gnU./CeqECvMwN6LEeQuGny6z7cDhEarwe0nnPELTlULMDT8OSy"
-    });
-    userId = user._id;
+    return app = await createServer();
 });
 
 afterAll(async () => {
-    await client.dropCollection("documents");
-    await client.dropCollection("users");
-    await client.disconnect();
+    await app.get("db").disconnect();
 });
 
-test("creates documents", async () => {
-    let document = await client.createDocument({
-        name: "name",
-        content: "content",
-        collaborators: [
-            client.getEntityReference(userId)
-        ]
-    });
-
-    document = await client.getDocument(document._id.toString(), userId);
-    expect(document.name).toEqual("name");
-    expect(document.content).toEqual("content");
-
-    let documents = await client.getDocuments(userId);
-    expect(documents.length).toEqual(1);
+test("Register user with bad credentials", async () => {
+    await supertest(app)
+        .post("/v1/register")
+        .send({
+            password: "password"
+        })
+        .expect(400);
+    await supertest(app)
+        .post("/v1/register")
+        .send({
+            username: "username"
+        })
+        .expect(400);
 });
 
-test("updates documents", async () => {
-    let document = await client.createDocument({
-        name: "name",
-        content: "content",
-        collaborators: [
-            client.getEntityReference(userId)
-        ]
-    });
+test("Register a user", async () => {
+    await supertest(app)
+        .post("/v1/register")
+        .send({
+            username: "username",
+            password: "password"
+        })
+        .expect(200);
+});
 
-    await client.updateDocument(document._id.toString(), {
-        name: "name2",
-        content: "content2"
-    })
+test("Register a user with a taken username", async () => {
+    await supertest(app)
+        .post("/v1/register")
+        .send({
+            username: "username",
+            password: "password"
+        })
+        .expect(400);
+});
 
-    document = await client.getDocument(document._id.toString(), userId);
-    expect(document.name).toEqual("name2");
-    expect(document.content).toEqual("content2");
-})
+test("Login with incorrect credentials", async () => {
+    await supertest(app)
+        .post("/v1/login")
+        .send({
+            username: "username2",
+            password: "password2"
+        })
+        .expect(400);
+});
+
+test("Login with correct credentials", async () => {
+    const res = await supertest(app)
+        .post("/v1/login")
+        .send({
+            username: "username",
+            password: "password"
+        })
+        .expect(200);
+    expect(res.body.token).toBeDefined();
+    token = res.body.token;
+});
+
+test("Create a document", async () => {
+    const res = await supertest(app)
+        .post("/v1/documents")
+        .set("Authorization", "Bearer "+token)
+        .send({
+            contents: "<p>This is text.</p>",
+            name: "Name",
+            type: "text",
+            comments: []
+        })
+        .expect(200);
+    expect(res.body.name).toBe("Name");
+});

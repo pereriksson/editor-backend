@@ -3,6 +3,13 @@ const {JWT_SECRET} = require("../constants");
 const jwt = require("jsonwebtoken");
 const Sendgrid = require("../apis/Sendgrid");
 
+const sendError = (res, error) => {
+    res.status(400).json({
+        success: false,
+        error: error
+    });
+}
+
 const getDocuments = async (req, res) => {
     const client = req.app.get("db");
 
@@ -49,10 +56,7 @@ const login = async (req, res) => {
     const user = await db.getUserByUsername(req.body.username);
 
     if (!user) {
-        res.json({
-            success: false,
-            error: "Username or password is incorrect."
-        });
+        sendError(res, "Username or password is incorrect.");
         return false;
     }
 
@@ -84,28 +88,19 @@ const register = async (req, res) => {
     const db = req.app.get("db");
 
     if (!req.body.username) {
-        res.json({
-            success: false,
-            error: "A username must be supplied."
-        });
+        sendError(res, "A username must be supplied.");
         return false;
     }
 
     if (!req.body.password) {
-        res.json({
-            success: false,
-            error: "A password must be supplied."
-        });
+        sendError(res, "A password must be supplied.");
         return false;
     }
 
     const existingUser = await db.getUserByUsername(req.body.username);
 
     if (existingUser) {
-        res.json({
-            success: false,
-            error: "The username is already taken."
-        });
+        sendError(res, "The username is already taken.");
         return false;
     }
 
@@ -145,10 +140,7 @@ const acceptInvitation = async (req, res) => {
     const invite = await db.getInvite(req.body.id);
 
     if (!invite) {
-        res.json({
-            success: false,
-            error: "Invalid invite id."
-        });
+        sendError(res, "Invalid invite id.");
         return false;
     }
 
