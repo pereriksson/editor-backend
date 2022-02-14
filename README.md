@@ -37,6 +37,26 @@ This REST API provides the following routes:
 | POST /documents        | Create a document                       |
 | PUT /documents/:id     | Update an existing document             |
 
+## Configuration
+
+This app needs the following configured environment variables. They can be configured by creating a `.env.production` file.
+
+| Environment variable          | Example                    | Description                                             |
+|-------------------------------|----------------------------|---------------------------------------------------------|
+| DATABASE_PROTOCOL             | mongodb+srv                | The protocol as indicated by the MongoDB instance.      |
+| DATABASE_HOSTNAME             | cluster0.zp46i.mongodb.net | The hostname for the connection.                        |
+| DATABASE_DATABASE             | editor                     | The MongoDB database name.                              |
+| DATABASE_USER                 | user                       | The MongoDB username.                                   |
+| DATABASE_PASSWORD             | 38IjSUubHIu3KI             | A MongoDB password.                                     |
+| DATABASE_DOCUMENTS_COLLECTION | documents                  | The name of the documents collection.                   |
+| DATABASE_USERS_COLLECTION     | users                      | The name of the users collection.                       |
+| DATABASE_INVITES_COLLECTION   | invites                    | The name of the invites collection.                     |
+| WEBSOCKET_CORS_HOSTNAMES      | https://app.azure.net      | The CORS hostnames to be returned to the client.        |
+| JWT_SECRET                    | pL5zW5cL8...               | The JWT secret that is used for hashing and validating. |
+| GRAPHQL_GRAPHIQL              | true                       | If the GRAPHIQL UI should be served, e g in development.|
+| SENDGRID_API_KEY              | SG.CDvuEIv3RN60SfIF4jXP... | The API key as given by the Sendgrid account.           |
+| SENDGRID_TEMPLATE_ID          | d-de204326fd254e8ab692b... | The ID of the Sendgrid template used for emails.        |
+
 ## A typical document
 
 A typical document consist of the following NoSQL document structure:
