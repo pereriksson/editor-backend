@@ -13,7 +13,7 @@ const ObjectId = require("mongodb").ObjectId;
 
 class DBClient {
     getEntityReference(id) {
-        return ObjectId(id);
+        return new ObjectId(id);
     }
 
     async connect() {

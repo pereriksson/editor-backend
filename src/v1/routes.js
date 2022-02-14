@@ -5,39 +5,32 @@ const Sendgrid = require("../apis/Sendgrid");
 
 const getDocuments = async (req, res) => {
     const client = req.app.get("db");
-    await client.connect();
 
     const documents = await client.getDocuments(req.payload._id);
-    await client.disconnect();
 
     res.json(documents);
 };
 
 const getDocument = async (req, res) => {
     const client = req.app.get("db");
-    await client.connect();
 
     const document = await client.getDocument(req.params.id, req.payload._id);
-    await client.disconnect();
 
     res.json(document);
 };
 
 const updateDocument = async (req, res) => {
     const client = req.app.get("db");
-    await client.connect();
 
     await client.updateDocument(req.params.id, req.body);
 
     const document = await client.getDocument(req.params.id);
-    await client.disconnect();
 
     res.json(document);
 };
 
 const createDocument = async (req, res) => {
     const client = req.app.get("db");
-    await client.connect();
 
     const parsedJwtToken = jwt.decode(req.headers.authorization.split(" ")[1]);
 
@@ -47,14 +40,12 @@ const createDocument = async (req, res) => {
             client.getEntityReference(parsedJwtToken._id)
         ]
     });
-    await client.disconnect();
 
     res.json(document);
 }
 
 const login = async (req, res) => {
     const db = req.app.get("db");
-    await db.connect();
     const user = await db.getUserByUsername(req.body.username);
 
     if (!user) {
@@ -91,7 +82,6 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
     const db = req.app.get("db");
-    await db.connect();
 
     if (!req.body.username) {
         res.json({
@@ -131,7 +121,6 @@ const register = async (req, res) => {
 
 const invite = async (req, res) => {
     const db = req.app.get("db");
-    await db.connect();
     const invite = await db.createInvite({
         documentId: req.body.documentId,
         email: req.body.email
@@ -144,7 +133,6 @@ const invite = async (req, res) => {
 
 const acceptInvitation = async (req, res) => {
     const db = req.app.get("db");
-    await db.connect();
 
     if (!/^[a-f\d]{24}$/i.test(req.body.id)) {
         res.json({

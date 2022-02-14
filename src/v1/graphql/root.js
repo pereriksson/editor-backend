@@ -17,8 +17,7 @@ const RootQueryType = new GraphQLObjectType({
             type: new GraphQLList(DocumentType),
             description: 'A list of all documents',
             resolve: async (parent, args, req) => {
-                await req.app.get("db").connect();
-                return await req.app.get("db").getDocuments(req.payload._id)
+                return await req.app.get("db").getDocuments(req.payload._id);
             }
         }
     })
