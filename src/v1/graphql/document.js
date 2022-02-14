@@ -17,6 +17,7 @@ const DocumentType = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         contents: { type: new GraphQLNonNull(GraphQLString) },
         comments: { type: new GraphQLList(CommentType) },
+        type: { type: new GraphQLNonNull(GraphQLString) },
         collaborators: {
             type: new GraphQLList(UserType),
             resolve: async (document, args, req) => {
