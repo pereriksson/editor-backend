@@ -41,6 +41,10 @@ class DBClient {
         await this.db.collection(name).drop();
     }
 
+    async deleteAllDocuments(name) {
+        await this.db.collection(name).deleteMany({});
+    }
+
     async getDocuments(_id) {
         this.usersCollection = this.db.collection(DATABASE_USERS_COLLECTION);
         this.documentsCollection = this.db.collection(DATABASE_DOCUMENTS_COLLECTION);

@@ -130,6 +130,16 @@ const register = async (req, res) => {
 
 const invite = async (req, res) => {
     const db = req.app.get("db");
+
+    const parsedJwtToken = jwt.decode(req.headers.authorization.split(" ")[1]);
+
+    const document = await db.getDocument(req.body.documentId, parsedJwtToken._id);
+
+    if (!document) {
+        sendError(res, "The requested document does not exist.");
+        return false;
+    }
+
     const invite = await db.createInvite({
         documentId: req.body.documentId,
         email: req.body.email
