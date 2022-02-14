@@ -142,6 +142,44 @@ const invite = async (req, res) => {
     res.sendStatus(200);
 }
 
+const acceptInvitation = async (req, res) => {
+    const db = req.app.get("db");
+    await db.connect();
+
+    if (!/^[a-f\d]{24}$/i.test(req.body.id)) {
+        res.json({
+            success: false,
+            error: "Invalid invite id."
+        });
+        return false;
+    }
+
+    const invite = await db.getInvite(req.body.id);
+
+    if (!invite) {
+        res.json({
+            success: false,
+            error: "Invalid invite id."
+        });
+        return false;
+    }
+
+    const user = await db.createUser({
+        firstName: req.body.firstName,
+        lastMame: req.body.lastName,
+        password: bcrypt.hashPassword(req.body.password),
+        username: req.body.username,
+        email: req.body.email
+    });
+
+    const document = await db.getDocumentInternal(invite.documentId);
+    document.collaborators.push(user._id);
+    delete document._id;
+    await db.updateDocument(invite.documentId, document);
+
+    res.sendStatus(200);
+}
+
 module.exports = {
     getDocument,
     getDocuments,
@@ -149,5 +187,6 @@ module.exports = {
     createDocument,
     login,
     register,
-    invite
+    invite,
+    acceptInvitation
 };

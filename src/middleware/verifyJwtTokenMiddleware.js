@@ -9,7 +9,8 @@ let verifyJwtTokenMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
     const safeAnonymousRoutes = [
         "/v1/login",
-        "/v1/register"
+        "/v1/register",
+        "/v1/acceptInvitation"
     ];
 
     const reqUrl = url.parse(req.url);

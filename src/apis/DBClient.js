@@ -72,6 +72,23 @@ class DBClient {
         return result[0];
     }
 
+    /**
+     * Retrieves a document without validating the collaborator.
+     * @param id
+     * @returns {Promise<*>}
+     */
+    async getDocumentInternal(id) {
+        this.usersCollection = this.db.collection(DATABASE_USERS_COLLECTION);
+        this.documentsCollection = this.db.collection(DATABASE_DOCUMENTS_COLLECTION);
+        const _id = new ObjectId(id);
+        const query = {
+            _id
+        };
+        const cursor = await this.documentsCollection.find(query);
+        const result = await cursor.toArray();
+        return result[0];
+    }
+
     async getDocument(id, collaboratorId) {
         this.usersCollection = this.db.collection(DATABASE_USERS_COLLECTION);
         this.documentsCollection = this.db.collection(DATABASE_DOCUMENTS_COLLECTION);
@@ -81,6 +98,15 @@ class DBClient {
             collaborators: ObjectId(collaboratorId)
         };
         const cursor = await this.documentsCollection.find(query);
+        const result = await cursor.toArray();
+        return result[0];
+    }
+
+    async getInvite(id) {
+        this.invitesCollection = this.db.collection(DATABASE_INVITES_COLLECTION);
+        const _id = new ObjectId(id);
+        const query = { _id };
+        const cursor = await this.invitesCollection.find(query);
         const result = await cursor.toArray();
         return result[0];
     }
