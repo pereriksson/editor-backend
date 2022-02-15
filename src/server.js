@@ -10,6 +10,7 @@ const verifyJwtTokenMiddleware = require("./middleware/verifyJwtTokenMiddleware"
 const createServer = async () => {
     const app = express();
     const server = http.createServer(app);
+
     const io = require("socket.io")(server, {
         cors: {
             origin: WEBSOCKET_CORS_HOSTNAMES,
@@ -34,7 +35,7 @@ const createServer = async () => {
         });
     });
 
-    return server;
+    return [server, app];
 }
 
 module.exports = createServer;

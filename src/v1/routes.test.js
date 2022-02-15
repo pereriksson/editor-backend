@@ -12,7 +12,7 @@ let documentId;
 const incorrectDocumentId = "612810ba64dc6e39e746f1ec";
 
 beforeAll(async () => {
-    return app = await createServer();
+    return [server, app] = await createServer();
 });
 
 afterAll(async () => {
