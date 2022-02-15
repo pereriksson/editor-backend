@@ -162,14 +162,3 @@ test("Send an invite for a document with an incorrect id", async () => {
         })
         .expect(400);
 });
-
-test("Send an invite for a document", async () => {
-    const res = await supertest(app)
-        .post("/v1/invite")
-        .set("Authorization", "Bearer "+token)
-        .send({
-            documentId: documentId,
-            email: "user@example.com"
-        })
-        .expect(200);
-});
