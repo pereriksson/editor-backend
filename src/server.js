@@ -34,7 +34,7 @@ const createServer = async () => {
         });
     });
 
-    return app;
+    return server;
 }
 
 module.exports = createServer;
